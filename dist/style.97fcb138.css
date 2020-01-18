@@ -1,0 +1,32 @@
+body {
+  background-color: green;
+}
+
+.card-display {
+  display: inline-block;
+  margin-top: 50px;
+}
+.card-display img {
+  max-width: 50px;
+  height: auto;
+  clear: both;
+  display: block;
+  margin: 0 auto;
+}
+
+.card-block {
+  display: inline-block;
+  padding: 10px;
+  font-size: 12px;
+  min-width: 70px;
+  text-align: center;
+}
+
+.delt-cards img {
+  max-width: 150px;
+  height: auto;
+  clear: both;
+  display: block;
+}
+
+/*# sourceMappingURL=/style.97fcb138.css.map */
