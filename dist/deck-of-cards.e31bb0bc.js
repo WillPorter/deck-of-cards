@@ -132,7 +132,6 @@ window.addEventListener('load', function () {
   var randomDealBtn = document.querySelector('.random-deal-button'); //deck display
 
   var cardDisplay = document.querySelector('.card-display');
-  var cardImg = document.querySelector('.card-img');
   var dealDisplay = document.querySelector('.delt-cards'); //create deck by looping 52 times and return results to deck array
 
   var Deck = {
@@ -196,7 +195,6 @@ window.addEventListener('load', function () {
     //cut the deck in half display two arrays
     cut: function cut(arr) {
       var cut1 = arr.slice(0, 26);
-      console.log(cut1);
       var cut2 = arr.slice(27, 51);
       var cut1Display = cut1.map(Deck.displayName);
       var cut2Display = cut2.map(Deck.displayName);
@@ -207,15 +205,21 @@ window.addEventListener('load', function () {
       var firstCard = arr.shift();
       var firstCardName = Deck.displayName(firstCard);
       dealDisplay.innerHTML = "<br><br>Delt card:<br>".concat(firstCardName);
+    },
+    dealRandom: function dealRandom(arr) {
+      //find a random card in the deck and display it
+      var randCard = arr[Math.floor(Math.random() * arr.length)];
+      var randCardLocation = arr.indexOf(randCard);
+      arr.splice(randCardLocation, 1);
+      var randCardDisplay = Deck.displayName(randCard);
+      dealDisplay.innerHTML = "<br><br>Randomly delt card:<br>".concat(randCardDisplay);
     }
   };
-  console.log(buildBtn);
 
   if (buildBtn) {
     buildBtn.addEventListener('click', function (event) {
       event.preventDefault();
       Deck.build();
-      console.log(deckArr);
       Deck.display();
     });
   }
@@ -247,6 +251,14 @@ window.addEventListener('load', function () {
       Deck.display(deckArr); //give ability to create a fresh deck
 
       isDeckBuilt = false;
+    });
+  }
+
+  if (randomDealBtn) {
+    randomDealBtn.addEventListener('click', function (event) {
+      event.preventDefault();
+      Deck.dealRandom(deckArr);
+      Deck.display(deckArr);
     });
   }
 
