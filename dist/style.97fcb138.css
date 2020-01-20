@@ -29,4 +29,16 @@ body {
   display: block;
 }
 
+.card {
+  display: inline-block;
+}
+
+.message {
+  margin-top: 20px;
+}
+
+.hit-stay {
+  margin-top: 20px;
+}
+
 /*# sourceMappingURL=/style.97fcb138.css.map */

@@ -13,6 +13,7 @@ window.addEventListener('load', function() {
     let cutBtn = document.querySelector('.cut-button');
     let dealBtn = document.querySelector('.deal-button');
     let randomDealBtn = document.querySelector('.random-deal-button');
+    let bjBtn = document.querySelector('bj-button')
 
     //deck display
     var cardDisplay = document.querySelector('.card-display');
