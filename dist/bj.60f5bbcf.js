@@ -118,11 +118,14 @@ parcelRequire = (function (modules, cache, entry, globalName) {
 
   return newRequire;
 })({"bj.js":[function(require,module,exports) {
+// #### TODO
+// ability to have an Ace score either 11 or 1.  as of now they are only 11.
+// lock down the buttons after the game is over except for the deal blackjack button
 window.addEventListener('load', function () {
   // create card object
   var suites = ['hearts', 'diamonds', 'spades', 'clubs'];
   var values = ['A', '2', '3', '4', '5', '6', '7', '8', '9', '10', 'J', 'Q', 'K'];
-  var score = [1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 10, 10, 10];
+  var score = [11, 2, 3, 4, 5, 6, 7, 8, 9, 10, 10, 10, 10];
   var deckArr = [];
   var isDeckBuilt = false;
   var dealerScore = 0;
