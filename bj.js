@@ -1,6 +1,7 @@
 // #### TODO
 // ability to have an Ace score either 11 or 1.  as of now they are only 11.
 // lock down the buttons after the game is over except for the deal blackjack button
+// add max number of cards delt 
 
 window.addEventListener('load', function() {
 
@@ -29,9 +30,9 @@ window.addEventListener('load', function() {
     var playersHit = document.querySelector('.players-hit');
     var message = document.querySelector('.message');
 
-    //create deck by looping 52 times and return results to deck array
+
     var Deck = {
-        
+        //create deck by looping 52 times and return results to deck array
         // build the deck.  sets and array of objects into deckArr
         build: function() {
             //check to see if the deck is already built.  if it is, don't build again
@@ -101,8 +102,8 @@ window.addEventListener('load', function() {
 
         //cut the deck in half display two arrays
         cut: function(arr) {
-            let cut1 = arr.slice(0, 26);
-            let cut2 = arr.slice(27, 51);
+            let cut1 = arr.slice(0, 25);
+            let cut2 = arr.slice(26, 51);
             let cut1Display = cut1.map(Deck.displayName);
             let cut2Display = cut2.map(Deck.displayName);
 
@@ -137,9 +138,17 @@ window.addEventListener('load', function() {
                 }
                 
             }
+
             //set the scores to the bothScores object
             bothScores.dealerScore = dealerScore;
             bothScores.playerScore = playerScore;
+
+            //check for BJ
+            if(playerScore == 21 && dealerScore != 21) {
+                message.innerHTML = '<strong>BLACKJACK<br />YOU are a WINNER!!!</strong>';
+            } else if (playerScore == 21 && dealerScore == 21) {
+                message.innerHTML = '<strong>PUSH</strong>';
+            }
             return arr;
         },
 

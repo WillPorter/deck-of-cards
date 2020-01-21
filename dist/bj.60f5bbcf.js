@@ -121,6 +121,7 @@ parcelRequire = (function (modules, cache, entry, globalName) {
 // #### TODO
 // ability to have an Ace score either 11 or 1.  as of now they are only 11.
 // lock down the buttons after the game is over except for the deal blackjack button
+// add max number of cards delt 
 window.addEventListener('load', function () {
   // create card object
   var suites = ['hearts', 'diamonds', 'spades', 'clubs'];
@@ -142,9 +143,9 @@ window.addEventListener('load', function () {
   var playersSecond = document.querySelector('.players-second');
   var dealersHit = document.querySelector('.dealers-hit');
   var playersHit = document.querySelector('.players-hit');
-  var message = document.querySelector('.message'); //create deck by looping 52 times and return results to deck array
-
+  var message = document.querySelector('.message');
   var Deck = {
+    //create deck by looping 52 times and return results to deck array
     // build the deck.  sets and array of objects into deckArr
     build: function build() {
       //check to see if the deck is already built.  if it is, don't build again
@@ -207,8 +208,8 @@ window.addEventListener('load', function () {
     },
     //cut the deck in half display two arrays
     cut: function cut(arr) {
-      var cut1 = arr.slice(0, 26);
-      var cut2 = arr.slice(27, 51);
+      var cut1 = arr.slice(0, 25);
+      var cut2 = arr.slice(26, 51);
       var cut1Display = cut1.map(Deck.displayName);
       var cut2Display = cut2.map(Deck.displayName);
       cardDisplay.innerHTML = "<strong>Cut 1</strong><br>".concat(cut1Display, "<br><br>\n                <strong>Cut 2<br></strong>").concat(cut2Display);
@@ -237,7 +238,14 @@ window.addEventListener('load', function () {
 
 
       bothScores.dealerScore = dealerScore;
-      bothScores.playerScore = playerScore;
+      bothScores.playerScore = playerScore; //check for BJ
+
+      if (playerScore == 21 && dealerScore != 21) {
+        message.innerHTML = '<strong>BLACKJACK<br />YOU are a WINNER!!!</strong>';
+      } else if (playerScore == 21 && dealerScore == 21) {
+        message.innerHTML = '<strong>PUSH</strong>';
+      }
+
       return arr;
     },
     // remove the next card from the deck, display it on the player side, add to the players score and return the deck array
@@ -351,7 +359,7 @@ var parent = module.bundle.parent;
 if ((!parent || !parent.isParcelRequire) && typeof WebSocket !== 'undefined') {
   var hostname = "" || location.hostname;
   var protocol = location.protocol === 'https:' ? 'wss' : 'ws';
-  var ws = new WebSocket(protocol + '://' + hostname + ':' + "54766" + '/');
+  var ws = new WebSocket(protocol + '://' + hostname + ':' + "49738" + '/');
 
   ws.onmessage = function (event) {
     checkedAssets = {};
