@@ -133,8 +133,6 @@ window.addEventListener('load', function () {
   var hitBtn = document.querySelector('.hit-button');
   var stayBtn = document.querySelector('.stay-button'); //deck display
 
-  var dealersCards = document.querySelector('.dealers-cards');
-  var playersCards = document.querySelector('.players-cards');
   var dealersFirst = document.querySelector('.dealers-first');
   var dealersSecond = document.querySelector('.dealers-second');
   var playersFirst = document.querySelector('.players-first');
@@ -144,6 +142,7 @@ window.addEventListener('load', function () {
   var message = document.querySelector('.message'); //create deck by looping 52 times and return results to deck array
 
   var Deck = {
+    // build the deck.  sets and array of objects into deckArr
     build: function build() {
       //check to see if the deck is already built.  if it is, don't build again
       if (!isDeckBuilt) {
@@ -154,12 +153,14 @@ window.addEventListener('load', function () {
           var cardSuite = suites[i];
 
           for (var x = 0; x < 13; x++) {
+            //build the card object and add it to the deckArr array variable
             var card = {};
             var cardValue = values[x];
             var cardScore = score[x];
             card.value = cardValue;
             card.suite = cardSuite;
-            card.score = cardScore;
+            card.score = cardScore; //card.img is for the file-path of the image
+
             card.img = "".concat(cardValue, "-").concat(cardSuite);
             deckArr.unshift(card);
           }
@@ -171,8 +172,7 @@ window.addEventListener('load', function () {
       } //limit the ability of the user to deal a second deck to the array
 
 
-      isDeckBuilt = true; //clear the dealt cards field
-
+      isDeckBuilt = true;
       return deckArr;
     },
     shuffle: function shuffle(array) {
@@ -210,6 +210,7 @@ window.addEventListener('load', function () {
       var cut2Display = cut2.map(Deck.displayName);
       cardDisplay.innerHTML = "<strong>Cut 1</strong><br>".concat(cut1Display, "<br><br>\n                <strong>Cut 2<br></strong>").concat(cut2Display);
     },
+    //remove the first four cards from the deck, display them, add the score value, and return the deck array
     dealBJ: function dealBJ(arr) {
       //loop throught the array to get the first four values and display
       for (var i = 0; i < 4; i++) {
@@ -229,15 +230,15 @@ window.addEventListener('load', function () {
           playersSecond.innerHTML = "".concat(nextCardName);
           playerScore += nextCard.score;
         }
-      }
+      } //set the scores to the bothScores object
+
 
       bothScores.dealerScore = dealerScore;
-      bothScores.playerScore = playerScore; // return {playerScore: playerScore, dealerScore: dealerScore, arr: arr};
-
+      bothScores.playerScore = playerScore;
       return arr;
     },
+    // remove the next card from the deck, display it on the player side, add to the players score and return the deck array
     hitBJ: function hitBJ(arr) {
-      console.log(bothScores.playerScore);
       var nextCard = arr.shift();
       var nextCardName = Deck.displayName(nextCard);
       playersHit.innerHTML += nextCardName; //add new card score to player score
@@ -248,9 +249,36 @@ window.addEventListener('load', function () {
         message.innerHTML = '<strong>YOU BUSTED<br />YOU STINK!</strong>';
       }
 
-      console.log(bothScores.playerScore);
       return arr;
     },
+    //checks the dealers score.  if less than 17 and less than the players score, hit again.  then run the score check funtion
+    stayBJ: function stayBJ(arr) {
+      if (bothScores.dealerScore < bothScores.playerScore && bothScores.dealerScore < 17) {
+        var nextCard = arr.shift();
+        var nextCardName = Deck.displayName(nextCard);
+        dealersHit.innerHTML += nextCardName; //add new card score to player score
+
+        bothScores.dealerScore += nextCard.score;
+        Deck.scoreCheck();
+      } else {
+        Deck.scoreCheck();
+      }
+    },
+    //logic to decide if the dealer should hit again or stay.  If hitting again, run the stayBJ function.  If staying, compare dealer vs player score and display a message.
+    scoreCheck: function scoreCheck() {
+      if (bothScores.dealerScore < bothScores.playerScore && bothScores.dealerScore < 17) {
+        Deck.stayBJ(deckArr);
+      } else if (bothScores.dealerScore >= 17 && bothScores.dealerScore > bothScores.playerScore && bothScores.dealerScore <= 21) {
+        message.innerHTML = 'Dealer WINS';
+      } else if (bothScores.dealerScore > 21) {
+        message.innerHTML = 'Dealer Busts<br />You WIN!!!';
+      } else if (bothScores.dealerScore == bothScores.playerScore) {
+        message.innerHTML = 'This round is a PUSH';
+      } else if (bothScores.dealerScore < bothScores.playerScore) {
+        message.innerHTML = 'You WIN!!!';
+      }
+    },
+    //clears all the cards and messages off the table
     clearTable: function clearTable() {
       dealersFirst.innerHTML = '';
       dealersSecond.innerHTML = '';
@@ -259,22 +287,8 @@ window.addEventListener('load', function () {
       dealersHit.innerHTML = '';
       playersHit.innerHTML = '';
       message.innerHTML = '';
-    } // dealRandom: function(arr) {
-    //     //find a random card in the deck and display it
-    //     var randCard = arr[Math.floor(Math.random()*arr.length)];
-    //     var randCardLocation = arr.indexOf(randCard);
-    //     arr.splice(randCardLocation, 1);
-    //     var randCardDisplay = Deck.displayName(randCard);
-    //     dealDisplay.innerHTML = `<br><br>Randomly delt card:<br>${randCardDisplay}`;
-    // },
-
-  }; // if (buildBtn) {
-  // buildBtn.addEventListener('click', function(event) {
-  //     event.preventDefault();
-  //     Deck.build();
-  //     Deck.display();
-  // });
-  // }
+    }
+  };
 
   if (dealBtn) {
     dealBtn.addEventListener('click', function (event) {
@@ -291,37 +305,20 @@ window.addEventListener('load', function () {
   if (hitBtn) {
     hitBtn.addEventListener('click', function (event) {
       event.preventDefault();
-      Deck.hitBJ(deckArr, bothScores); //give ability to build a new deck that is not shuffled
+      Deck.hitBJ(deckArr); //give ability to build a new deck that is not shuffled
 
       isDeckBuilt = false;
     });
-  } // if (cutBtn) {
-  //     cutBtn.addEventListener('click', function(event) {
-  //         event.preventDefault();
-  //         Deck.cut(deckArr);
-  //         //give ability to create a fresh deck
-  //         isDeckBuilt = false;
-  //     });
-  // }
-  // if (dealBtn) {
-  //     dealBtn.addEventListener('click', function(event) {
-  //         event.preventDefault();
-  //         Deck.deal(deckArr);
-  //         Deck.display(deckArr);
-  //         //give ability to create a fresh deck
-  //         isDeckBuilt = false;
-  //     });
-  // }
-  // if (randomDealBtn) {
-  //     randomDealBtn.addEventListener('click', function(event){
-  //         event.preventDefault();
-  //         Deck.dealRandom(deckArr);
-  //         Deck.display(deckArr);
-  //     });
-  // }
+  }
 
+  if (stayBtn) {
+    stayBtn.addEventListener('click', function (event) {
+      event.preventDefault();
+      Deck.stayBJ(deckArr); //give ability to build a new deck that is not shuffled
 
-  function newFunction() {}
+      isDeckBuilt = false;
+    });
+  }
 });
 },{}],"../../../.config/yarn/global/node_modules/parcel-bundler/src/builtins/hmr-runtime.js":[function(require,module,exports) {
 var global = arguments[3];
